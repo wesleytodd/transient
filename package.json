@@ -1,0 +1,22 @@
+{
+  "name": "transient",
+  "version": "1.0.0",
+  "description": "An animation loop implementation",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "./node_modules/mocha/bin/mocha",
+    "test-browser": "./node_modules/mochify/bin/cmd.js"
+  },
+  "author": "Wes Todd",
+  "license": "ICS",
+  "dependencies": {
+    "browser-next-tick": "^1.0.0"
+  },
+  "devDependencies": {
+    "mocha": "^2.2.1",
+    "mochify": "^2.6.0"
+  }
+}
