@@ -10,6 +10,10 @@
     "test": "./node_modules/mocha/bin/mocha",
     "test-browser": "./node_modules/mochify/bin/cmd.js"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wesleytodd/transient.git"
+  },
   "author": "Wes Todd",
   "license": "ICS",
   "dependencies": {
