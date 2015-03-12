@@ -21,10 +21,20 @@ var Transient = module.exports = function Transient(options) {
 	this._canceled = false;
 	this._currentFrame = null;
 	this._startTime = null;
+	this._timeAcc = null;
 };
 
 Transient.prototype.start = function() {
-	this._startTime = new Date().getTime();
+	var now = Date.now();
+	this._timeAcc = this._timeAcc || now;
+	this._startTime = now;
+
+	// For looped animations, compensate for lag between loops
+	if (this._timeAcc != this._startTime) {
+		this._timeAcc += this.duration;
+		this._startTime = this._timeAcc;
+	}
+
 	this.update();
 };
 
@@ -34,8 +44,7 @@ Transient.prototype.update = function() {
 		return this.onCancel();
 	}
 
-	var currentTime = new Date().getTime(),
-		progress = (currentTime - this._startTime) / this.duration;
+	var progress = (Date.now() - this._startTime) / this.duration;
 
 	// Are we done?
 	if (progress >= 1) {
