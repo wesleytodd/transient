@@ -1,5 +1,7 @@
 # Transient
 
+[![js-happiness-style](https://img.shields.io/badge/code%20style-happiness-brightgreen.svg)](https://github.com/JedWatson/happiness)
+
 A simple and minimal animation loop.  Consistant frame rate is attempted with independant progress timing and requestAnimationFrame.  This library is great for simple transition animations, thus the name, but can also be used to complex animations.
 
 Usage:

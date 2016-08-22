@@ -1,7 +1,7 @@
-var nextTick = require('browser-next-tick'),
-	noop = function(){};
+var nextTick = require('browser-next-tick');
+var noop = function () {};
 
-var Transient = module.exports = function Transient(options) {
+var Transient = module.exports = function Transient (options) {
 	options = options || {};
 
 	// Animation settings
@@ -24,13 +24,13 @@ var Transient = module.exports = function Transient(options) {
 	this._timeAcc = null;
 };
 
-Transient.prototype.start = function() {
+Transient.prototype.start = function () {
 	var now = Date.now();
 	this._timeAcc = this._timeAcc || now;
 	this._startTime = now;
 
 	// For looped animations, compensate for lag between loops
-	if (this._timeAcc != this._startTime) {
+	if (this._timeAcc !== this._startTime) {
 		this._timeAcc += this.duration;
 		this._startTime = this._timeAcc;
 	}
@@ -38,7 +38,7 @@ Transient.prototype.start = function() {
 	this.update();
 };
 
-Transient.prototype.update = function() {
+Transient.prototype.update = function () {
 	// Did we cancel?
 	if (this._canceled) {
 		return this.onCancel();
@@ -62,6 +62,6 @@ Transient.prototype.update = function() {
 	nextTick(this.update.bind(this));
 };
 
-Transient.prototype.cancel = function() {
+Transient.prototype.cancel = function () {
 	this._canceled = true;
 };
