@@ -1,4 +1,5 @@
 var nextTick = require('browser-next-tick');
+var now = require('@streammedev/perfnow');
 var noop = function () {};
 
 var Transient = module.exports = function Transient (options) {
@@ -25,9 +26,8 @@ var Transient = module.exports = function Transient (options) {
 };
 
 Transient.prototype.start = function () {
-	var now = Date.now();
-	this._timeAcc = this._timeAcc || now;
-	this._startTime = now;
+	this._startTime = now();
+	this._timeAcc = this._timeAcc || this._startTime;
 
 	// For looped animations, compensate for lag between loops
 	if (this._timeAcc !== this._startTime) {
@@ -44,7 +44,7 @@ Transient.prototype.update = function () {
 		return this.onCancel();
 	}
 
-	var progress = (Date.now() - this._startTime) / this.duration;
+	var progress = (now() - this._startTime) / this.duration;
 
 	// Are we done?
 	if (progress >= 1) {

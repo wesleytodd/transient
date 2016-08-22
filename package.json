@@ -17,6 +17,7 @@
   "author": "Wes Todd",
   "license": "ICS",
   "dependencies": {
+    "@streammedev/perfnow": "^2.0.0",
     "browser-next-tick": "^1.0.0"
   },
   "devDependencies": {
