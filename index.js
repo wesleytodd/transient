@@ -1,67 +1,69 @@
-var nextTick = require('browser-next-tick');
-var now = require('@streammedev/perfnow');
-var noop = function () {};
+'use strict'
+var Loop = require('./loop')
+var noop = function noop () {}
 
 var Transient = module.exports = function Transient (options) {
-	options = options || {};
+  var opts = options || {}
 
-	// Animation settings
-	this.duration = options.duration || 5000;
-	this.fps = options.fps || 60;
-	this.loop = options.loop || false;
+  // Animation settings
+  this.name = opts.name
+  this.duration = opts.duration || 5000
+  this.fps = opts.fps || 60
+  this.loop = !!(opts.loop || false)
 
-	// Calculate total number of frames
-	this.frames = this.duration / 1000 * this.fps;
+  // Calculate total number of frames
+  this.frames = this.duration / 1000 * this.fps
 
-	// Our callback functions
-	this.draw = options.draw || noop;
-	this.onEnd = options.onEnd || noop;
-	this.onCancel = options.onCancel || this.onEnd;
+  // Our callback functions
+  this.draw = opts.draw || noop
+  this.onEnd = opts.onEnd || noop
+  this.onCancel = opts.onCancel || this.onEnd
 
-	// Keep some internal state
-	this._canceled = false;
-	this._currentFrame = null;
-	this._startTime = null;
-	this._timeAcc = null;
-};
+  // Setup our integration with the loop
+  this._onLoopEnd = noop
+  if (opts.animationLoop) {
+    // Add this update call to trail after other loop updates
+    this._onLoopEnd = opts.animationLoop.onTick(this.update.bind(this))
+    this._loop = opts.animationLoop
+  } else {
+    this._loop = new Loop(this.update.bind(this))
+    this._onLoopEnd = this._loop.end.bind(this._loop)
+  }
+
+  // Internal tracking for looped animations
+  this._timeAcc = 0
+}
 
 Transient.prototype.start = function () {
-	this._startTime = now();
-	this._timeAcc = this._timeAcc || this._startTime;
+  this._loop.start()
+  this._timeAcc = 0
+}
 
-	// For looped animations, compensate for lag between loops
-	if (this._timeAcc !== this._startTime) {
-		this._timeAcc += this.duration;
-		this._startTime = this._timeAcc;
-	}
+Transient.prototype.update = function (elapsed, delta) {
+  // Are we done?
+  var t = elapsed - this._timeAcc
+  if (t >= this.duration) {
+    this._timeAcc += t
+    if (!this.loop) {
+      this._onLoopEnd()
+      return this.onEnd()
+    }
+  }
 
-	this.update();
-};
+  var progress = t / this.duration
 
-Transient.prototype.update = function () {
-	// Did we cancel?
-	if (this._canceled) {
-		return this.onCancel();
-	}
-
-	var progress = (now() - this._startTime) / this.duration;
-
-	// Are we done?
-	if (progress >= 1) {
-		return this.loop ? this.start() : this.onEnd();
-	}
-
-	// Determine frame
-	var frame = Math.floor(this.frames * progress);
-	if (frame !== this._currentFrame) {
-		this._currentFrame = frame;
-		this.draw(progress);
-	}
-
-	// Call again on next tick/request animation frame
-	nextTick(this.update.bind(this));
-};
+  // Determine frame
+  var frame = Math.floor(this.frames * progress)
+  if (frame !== this._currentFrame) {
+    this._currentFrame = frame
+    this.draw(progress)
+  }
+}
 
 Transient.prototype.cancel = function () {
-	this._canceled = true;
-};
+  this._loop.end()
+  this.onCancel()
+}
+
+// Export the loop directly
+Transient.Loop = Loop
