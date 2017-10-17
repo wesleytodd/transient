@@ -1,8 +1,31 @@
 /* global describe, it */
 var Transient = require('../');
+var Loop = require('../loop');
 var assert = require('assert');
 
 describe('Transient', function () {
+	describe('Loop', function () {
+		it('should start and stop looping', function (done) {
+			var count = 0;
+			var l = new Loop(function (elapsed, delta) {
+				assert(elapsed >= 0);
+				assert(delta >= 0);
+				assert(elapsed >= delta);
+				count++;
+
+				if (count === 100) {
+					l.end();
+					setTimeout(function () {
+						done();
+					}, 250);
+				} else if (count > 100) {
+					throw new Error('Loop didnt stop');
+				}
+			});
+			l.start();
+		});
+	});
+
 	it('should calculate the right number of frames and call draw for every one', function (done) {
 		var called = 0;
 		var a = new Transient({
