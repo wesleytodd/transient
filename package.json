@@ -7,8 +7,9 @@
     "test": "test"
   },
   "scripts": {
-    "test": "happiness && mocha",
-    "test-browser": "./node_modules/mochify/bin/cmd.js"
+    "test": "standard && mocha",
+    "examples": "browserify examples/little-scene/main.js > examples/little-scene/build.js && open examples/little-scene/index.html",
+    "examples-dev": "watchify examples/little-scene/main.js -o examples/little-scene/build.js"
   },
   "repository": {
     "type": "git",
@@ -21,8 +22,9 @@
     "browser-next-tick": "^1.0.0"
   },
   "devDependencies": {
-    "happiness": "^10.0.2",
+    "browserify": "^14.4.0",
     "mocha": "^4.0.1",
-    "mochify": "^3.3.0"
+    "standard": "^10.0.3",
+    "watchify": "^3.9.0"
   }
 }
