@@ -11,8 +11,15 @@ async function init () {
   stage.width = 640
   stage.height = 320
 
-  var canvas1 = await loadImgToCanvas(stage, 'layer-1.png')
-  var canvas2 = await loadImgToCanvas(stage, 'layer-2.png')
+  var [err1, canvas1] = await loadImgToCanvas(stage, 'layer-1.png')
+  if (err1) {
+    return console.error(err1)
+  }
+
+  var [err2, canvas2] = await loadImgToCanvas(stage, 'layer-2.png')
+  if (err2) {
+    return console.error(err2)
+  }
 
   // Start animation
   var a = new Animation({
@@ -22,7 +29,7 @@ async function init () {
       var c = stage.getContext('2d')
       var w = stage.width
       var o = -Math.floor(w * progress)
-      var o2 = -Math.floor(o * 2)
+      var o2 = Math.floor(o * 2)
 
       // Draw background
       c.drawImage(canvas1, o, 0, w, stage.height)
@@ -56,10 +63,10 @@ async function loadImgToCanvas (stage, src) {
         0, 0, stage.width, stage.height
       )
 
-      resolve(can)
+      resolve([null, can])
     }
     img.onerror = function (e) {
-      reject(e)
+      resolve([e])
     }
     img.src = src
   })
