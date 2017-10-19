@@ -4,7 +4,7 @@
 [![NPM Downloads](https://img.shields.io/npm/dm/transient.svg)](https://npmjs.org/package/transient)
 [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 
-![image](/wesleytodd/transient/blob/master/examples/little-scene/scene.gif)
+![image](https://github.com/wesleytodd/transient/blob/master/examples/little-scene/scene.gif)
 
 A simple and minimal animation loop.  Consistent frame rate's are achieved with `requestAnimationFrame` and high resolution timing. 
 This library is great for simple transition animations, thus the name, but can also be used for complex animations.
