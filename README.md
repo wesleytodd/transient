@@ -1,27 +1,31 @@
 # Transient
 
-[![js-happiness-style](https://img.shields.io/badge/code%20style-happiness-brightgreen.svg)](https://github.com/JedWatson/happiness)
+[![NPM Version](https://img.shields.io/npm/v/transient.svg)](https://npmjs.org/package/transient)
+[![NPM Downloads](https://img.shields.io/npm/dm/transient.svg)](https://npmjs.org/package/transient)
+[![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 
-A simple and minimal animation loop.  Consistant frame rate is attempted with independant progress timing and requestAnimationFrame.  This library is great for simple transition animations, thus the name, but can also be used to complex animations.
+![image](https://github.com/wesleytodd/transient/blob/master/examples/little-scene/scene.gif)
+
+A simple and minimal animation loop.  Consistent frame rate's are achieved with `requestAnimationFrame` and high resolution timing. 
+This library is great for simple transition animations, thus the name, but can also be used for complex animations.
 
 Usage:
 
 ```javascript
-var animation = require('transient');
-
-var el = document.getElementById('.my-element');
+const Animation = require('transient')
+const el = document.getElementById('.my-element')
 
 // Create the animation
-var fadeIn = new animation({
-	duration: 1500, // 1.5 seconds
-	draw: function(progress) {
-		// progress is an integer between 0 and 1
-		el.style.opacity = progress;
-	}
-});
+var fadeIn = new Animation({
+  duration: 1500, // 1.5 seconds
+  draw: function (progress) {
+    // progress is an integer between 0 and 1
+    el.style.opacity = progress;
+  }
+})
 
 // Start the animation
-fadeIn.start();
+fadeIn.start()
 ```
 
 Options:
@@ -32,3 +36,35 @@ Options:
 - `draw`: The draw function which is called for each loop.
 - `onEnd`: A function to call when the animation is finished.
 - `onCancel`: A function to call when the animation is canceled.  If this is not specified it will call the `onEnd` function
+
+## Advanced Usage
+
+This package's main export is perfect for handling single animations, but it also exports a loop for more complex work.  A single
+loop can be started for general animation use, and many `Transient` animation instances can be attached to one loop.  Here is an example:
+
+```javascript
+const Animation = require('transient')
+const Loop = require('transient/loop') // or const Loop = Animation.Loop
+
+// Only use one loop to syncronize the animations
+var l = new Loop()
+
+var moveBackground = new Animation({
+  duration: 1000 * 10, // 10s
+  animationLoop: l,
+  draw: function (progress) {
+    // Draw background
+  }
+})
+var moveForeground = new Animation({
+  duration: 1000 * 5, // 5s
+  animationLoop: l,
+  draw: function (progress) {
+    // Draw foreground
+  }
+})
+
+// Start the animations
+moveBackground.start()
+moveForeground.start()
+```
