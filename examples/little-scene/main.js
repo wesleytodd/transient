@@ -1,3 +1,4 @@
+/* globals Image */
 const Animation = require('../../')
 
 // Go do stuff
@@ -5,13 +6,13 @@ init()
 
 // Load the images, then create the animations
 async function init () {
-  // Size up canvas 
+  // Size up canvas
   var stage = document.getElementById('stage')
   stage.width = 640
   stage.height = 320
 
-  var canvas1 = await loadImgToCanvas('layer-1.png')
-  var canvas2 = await loadImgToCanvas('layer-2.png')
+  var canvas1 = await loadImgToCanvas(stage, 'layer-1.png')
+  var canvas2 = await loadImgToCanvas(stage, 'layer-2.png')
 
   // Start animation
   var a = new Animation({
@@ -30,15 +31,15 @@ async function init () {
       // Draw foreground (goes 2x so needs a third piece)
       c.drawImage(canvas2, o2, 0, w, stage.height)
       c.drawImage(canvas2, o2 + w, 0, w, stage.height)
-      c.drawImage(canvas2, o2 + (w*2), 0, w, stage.height)
+      c.drawImage(canvas2, o2 + (w * 2), 0, w, stage.height)
     }
   })
-    
+
   // Start animation
   a.start()
 }
 
-async function loadImgToCanvas (src) {
+async function loadImgToCanvas (stage, src) {
   return new Promise(function (resolve, reject) {
     var img = new Image()
     img.onload = function () {
