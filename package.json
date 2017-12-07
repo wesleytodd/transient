@@ -11,7 +11,9 @@
     "postpublish": "git push && git push --tags",
     "test": "standard && mocha",
     "examples": "browserify examples/little-scene/main.js > examples/little-scene/build.js && open examples/little-scene/index.html",
-    "examples-dev": "watchify examples/little-scene/main.js -o examples/little-scene/build.js"
+    "examples-dev": "watchify examples/little-scene/main.js -o examples/little-scene/build.js",
+    "example-moar-scene": "browserify examples/moar-scene/main.js > examples/moar-scene/build.js && open examples/moar-scene/index.html",
+    "example-moar-scene-dev": "watchify examples/moar-scene/main.js -o examples/moar-scene/build.js"
   },
   "repository": {
     "type": "git",
